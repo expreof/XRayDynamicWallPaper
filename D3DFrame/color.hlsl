@@ -6,7 +6,8 @@
 
 cbuffer cbPerObject : register(b0)
 {
-	float time; 
+	int cursorPosx;
+	int cursorPosy;
 };
 
 Texture2D gCrate:register(t0);
@@ -41,10 +42,13 @@ VertexOut VS(VertexIn vin)
 
 float4 PS(VertexOut pin) : SV_Target
 {
-    //return gCrate.Sample(gSamPoint,pin.TexC)*gPIC1.Sample(gSamPoint,pin.TexC);
-	float2 o=float2(0,0);
-	float dis=distance(o,pin.PosH.xy)/100.0f;
-	return float4(dis,dis,dis,dis);
+    float4 color = gCrate.Sample(gSamPoint,pin.TexC)*gPIC1.Sample(gSamPoint,pin.TexC);
+	float2 o=float2(cursorPosx,cursorPosy);
+
+	float scale=0.1;
+	float radius=300;
+	float dis=1-clamp((distance(o,pin.PosH.xy)-radius)*scale,0,1);
+	return color*float4(dis,dis,dis,dis);
 }
 
 

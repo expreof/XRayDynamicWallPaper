@@ -370,7 +370,7 @@ HRESULT MainWindow::OnResize()
 
 void MainWindow::Update()
 {
-	LARGE_INTEGER curr_time;
+	/*LARGE_INTEGER curr_time;
 	QueryPerformanceCounter(&curr_time);
 
 	static LARGE_INTEGER init_time = curr_time;
@@ -379,7 +379,12 @@ void MainWindow::Update()
 	QueryPerformanceFrequency(&countsPerSec);
 
 	ObjectConstants obj{ float(curr_time.QuadPart-init_time.QuadPart) / countsPerSec.QuadPart };
-	mObjectCB->CopyData(0, obj);
+	mObjectCB->CopyData(0, obj);*/
+
+	ObjectConstants cp;
+	GetCursorPos(&cp.CursorPos);
+
+	mObjectCB->CopyData(0, cp);
 }
 
 void MainWindow::Draw()

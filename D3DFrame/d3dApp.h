@@ -32,7 +32,7 @@ struct Vertex
 
 struct ObjectConstants
 {
-	float time = 0;
+	POINT CursorPos;
 };
 
 class MainWindow :public BaseWindow<MainWindow>
