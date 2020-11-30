@@ -41,7 +41,10 @@ VertexOut VS(VertexIn vin)
 
 float4 PS(VertexOut pin) : SV_Target
 {
-    return gCrate.Sample(gSamPoint,pin.TexC)*gPIC1.Sample(gSamPoint,pin.TexC);
+    //return gCrate.Sample(gSamPoint,pin.TexC)*gPIC1.Sample(gSamPoint,pin.TexC);
+	float2 o=float2(0,0);
+	float dis=distance(o,pin.PosH.xy)/100.0f;
+	return float4(dis,dis,dis,dis);
 }
 
 
