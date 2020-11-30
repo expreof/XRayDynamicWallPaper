@@ -21,6 +21,12 @@
     <ClCompile Include="d3dApp.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="d3dUtil.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureLoader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="d3dApp.h">
@@ -30,6 +36,15 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="d3dx12.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dUtil.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="uploadBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
