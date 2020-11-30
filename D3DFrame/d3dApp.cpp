@@ -575,7 +575,7 @@ void MainWindow::BuildRootSignature()
 	texTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 0);
 
 	CD3DX12_ROOT_PARAMETER slotRootParameter[2]{};
-	slotRootParameter[0].InitAsDescriptorTable(2, &texTable, D3D12_SHADER_VISIBILITY_PIXEL);
+	slotRootParameter[0].InitAsDescriptorTable(1, &texTable, D3D12_SHADER_VISIBILITY_PIXEL);
 	slotRootParameter[1].InitAsConstantBufferView(0);
 
 	D3D12_STATIC_SAMPLER_DESC sampler = {};

@@ -10,6 +10,7 @@ cbuffer cbPerObject : register(b0)
 };
 
 Texture2D gCrate:register(t0);
+Texture2D gPIC1:register(t1);
 
 SamplerState gSamPoint:register(s0);
 
@@ -40,7 +41,7 @@ VertexOut VS(VertexIn vin)
 
 float4 PS(VertexOut pin) : SV_Target
 {
-    return gCrate.Sample(gSamPoint,pin.TexC);
+    return gCrate.Sample(gSamPoint,pin.TexC)*gPIC1.Sample(gSamPoint,pin.TexC);
 }
 
 
