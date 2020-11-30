@@ -460,13 +460,21 @@ void MainWindow::Draw()
 
 void MainWindow::LoadTextures()
 {
-	auto woodCrateTex = std::make_unique<Texture>();
-	woodCrateTex->Name = "woodCrateTex";
-	woodCrateTex->Filename = L"WoodCrate01.dds";
+	auto Tex0 = std::make_unique<Texture>();
+	Tex0->Name = "PIC0";
+	Tex0->Filename = L"PIC0.dds";
 	ThrowIfFailed(DirectX::CreateDDSTextureFromFile12(mD3dDevice.Get(), mCommandList.Get(),
-		woodCrateTex->Filename.c_str(), woodCrateTex->Resource, woodCrateTex->UploadHeap));
+		Tex0->Filename.c_str(), Tex0->Resource, Tex0->UploadHeap));
 
-	mTextures[woodCrateTex->Name] = std::move(woodCrateTex);
+	mTextures[Tex0->Name] = std::move(Tex0);
+
+	auto Tex1 = std::make_unique<Texture>();
+	Tex1->Name = "PIC1";
+	Tex1->Filename = L"PIC1.dds";
+	ThrowIfFailed(DirectX::CreateDDSTextureFromFile12(mD3dDevice.Get(), mCommandList.Get(),
+		Tex1->Filename.c_str(), Tex1->Resource, Tex1->UploadHeap));
+
+	mTextures[Tex1->Name] = std::move(Tex1);
 }
 
 void MainWindow::BuildDescriptorHeaps()
@@ -481,7 +489,7 @@ void MainWindow::BuildDescriptorHeaps()
 	// 创建 SRV 堆
 	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc{};
 
-	srvHeapDesc.NumDescriptors = 1;
+	srvHeapDesc.NumDescriptors = 2;
 	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	ThrowIfFailed(mD3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&mSrvDescriptorHeap)));
@@ -489,17 +497,24 @@ void MainWindow::BuildDescriptorHeaps()
 	// 用实际的描述符填充堆
 	CD3DX12_CPU_DESCRIPTOR_HANDLE hDescriptor(mSrvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
-	auto woodCrateTex = mTextures["woodCrateTex"]->Resource;
+	auto Tex0 = mTextures["PIC0"]->Resource;
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.Format = woodCrateTex->GetDesc().Format;
+	srvDesc.Format = Tex0->GetDesc().Format;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = woodCrateTex->GetDesc().MipLevels;
+	srvDesc.Texture2D.MipLevels = Tex0->GetDesc().MipLevels;
 	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
-	mD3dDevice->CreateShaderResourceView(woodCrateTex.Get(), &srvDesc, hDescriptor);
+	mD3dDevice->CreateShaderResourceView(Tex0.Get(), &srvDesc, hDescriptor);
+
+	hDescriptor.Offset(1, mCbvSrvUavDescriptorSize);
+
+	auto Tex1 = mTextures["PIC1"]->Resource;
+	srvDesc.Format = Tex1->GetDesc().Format;
+	srvDesc.Texture2D.MipLevels = Tex1->GetDesc().MipLevels;
+	mD3dDevice->CreateShaderResourceView(Tex1.Get(), &srvDesc, hDescriptor);
 }
 
 void MainWindow::BuildConstantBuffers()
@@ -557,10 +572,10 @@ void MainWindow::BuildConstantBuffers()
 void MainWindow::BuildRootSignature()
 {
 	CD3DX12_DESCRIPTOR_RANGE texTable;
-	texTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+	texTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 0);
 
-	CD3DX12_ROOT_PARAMETER slotRootParameter[2];
-	slotRootParameter[0].InitAsDescriptorTable(1, &texTable, D3D12_SHADER_VISIBILITY_PIXEL);
+	CD3DX12_ROOT_PARAMETER slotRootParameter[2]{};
+	slotRootParameter[0].InitAsDescriptorTable(2, &texTable, D3D12_SHADER_VISIBILITY_PIXEL);
 	slotRootParameter[1].InitAsConstantBufferView(0);
 
 	D3D12_STATIC_SAMPLER_DESC sampler = {};
