@@ -53,6 +53,11 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		mResizing = false;
 		OnResize();
 		return 0;
+	case WM_HOTKEY:
+	{
+		PostQuitMessage(0);
+		return 0;
+	}
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
@@ -404,7 +409,7 @@ void MainWindow::Draw()
 	mCommandList->RSSetViewports(1, &mScreenViewPort);
 	mCommandList->RSSetScissorRects(1, &mScissorRect);
 
-	float tempColor[]{ 0.9,0.1,0.2,1 };
+	float tempColor[]{ 0.9,0.1,0.2,0 };
 	// 清除后台缓冲区和深度缓冲区
 	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), tempColor, 0, nullptr);
 	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1, 0, 0, nullptr);
