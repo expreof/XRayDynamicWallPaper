@@ -388,7 +388,7 @@ void MainWindow::Update()
 
 	ObjectConstants cp;
 	GetCursorPos(&cp.CursorPos);
-
+	ScreenToClient(Window(), &cp.CursorPos);	// 将屏幕坐标转换为客户区坐标以产生正确行为
 	mObjectCB->CopyData(0, cp);
 }
 
